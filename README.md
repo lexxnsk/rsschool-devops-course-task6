@@ -42,7 +42,7 @@ amyslivets@MacBook-Air-Alex rsschool-devops-course-task6 %
 ```
 ## Manual deployment using Helm Chart
 helm upgrade --install tristaprogrammista -n tristaprogrammista helm-charts/tristaprogrammista/
-'''
+```
 tristaprogrammista_botamyslivets@MacBook-Air-Alex rsschool-devops-course-task6 % helm list -A
 NAME                    NAMESPACE               REVISION        UPDATED                                 STATUS          CHART                               APP VERSION
 jenkins                 jenkins                 15              2024-11-22 14:34:27.796137 +0100 CET    deployed        jenkins-5.7.12                      2.479.1    
@@ -50,5 +50,5 @@ traefik                 kube-system             1               2024-11-03 12:30
 traefik-crd             kube-system             1               2024-11-03 12:30:30.685130472 +0000 UTC deployed        traefik-crd-27.0.201+up27.0.2       v2.11.10   
 tristaprogrammista      tristaprogrammista      3               2024-11-22 15:48:15.499506 +0100 CET    deployed        tristaprogrammista-0.1.0            1.16.0     
 wordpress               wordpress               3               2024-11-09 17:36:57.991983249 +0000 UTC deployed        wordpress-0.1.0                     latest     
-'''
+```
 
