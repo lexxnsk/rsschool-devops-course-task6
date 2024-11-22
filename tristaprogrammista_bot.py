@@ -2,13 +2,13 @@ import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# # Define the bot token as a variable
-# TRISTA_BOT_TOKEN = "8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk"
+# Define the bot token as a variable
+TRISTA_BOT_TOKEN = "8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk"
 
-# Retrieve the bot token from the environment variable
-TRISTA_BOT_TOKEN = os.getenv("TRISTA_BOT_TOKEN")
-if not TRISTA_BOT_TOKEN:
-    raise ValueError("Bot token not found! Ensure TRISTA_BOT_TOKEN is set.")
+# # Retrieve the bot token from the environment variable
+# TRISTA_BOT_TOKEN = os.getenv("TRISTA_BOT_TOKEN")
+# if not TRISTA_BOT_TOKEN:
+#     raise ValueError("Bot token not found! Ensure TRISTA_BOT_TOKEN is set.")
 
 # Define a function to handle incoming messages
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
