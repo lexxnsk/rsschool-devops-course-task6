@@ -35,13 +35,15 @@ pipeline {
                     echo "Running Docker image locally to test..."
                     sh """
                     docker run -d --name ${CONTAINER_NAME} ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
-                    // sleep 5  # Give it a few seconds to start up
-                    // curl http://localhost:8080  # Test the service locally (replace with your actual test)
+                    # sleep 5  # Give it a few seconds to start up
+                    # curl http://localhost:8080  # Test the service locally (replace with your actual test)
                     docker ps  # Verify it's running
                     """
                 }
             }
         }
+
+        // Uncomment the following stages if needed
 
         // stage('Push to ECR') {
         //     steps {
@@ -66,15 +68,16 @@ pipeline {
         //     }
         // }
 
-    //     stage('Verify Deployment') {
-    //         steps {
-    //             script {
-    //                 echo "Verifying the deployment in K3s..."
-    //                 sh "kubectl get pods -n ${NAMESPACE}"
-    //             }
-    //         }
-    //     }
-    // }
+        // stage('Verify Deployment') {
+        //     steps {
+        //         script {
+        //             echo "Verifying the deployment in K3s..."
+        //             sh "kubectl get pods -n ${NAMESPACE}"
+        //         }
+        //     }
+        // }
+    }
+
     post {
         success {
             script {
@@ -96,13 +99,5 @@ pipeline {
                 '''
             }
         }
-    }
-
-    // post {
-    //     always {
-    //         echo "Cleaning up..."
-    //         // Optional: Add cleanup steps, e.g., remove the Docker container or image if necessary
-    //     }
-    // }
     }
 }
