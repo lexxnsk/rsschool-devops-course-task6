@@ -1,7 +1,8 @@
-# The RS School - AWS DevOps Course. Project Documentation.
+# The RS School - AWS DevOps Course. Project Documentation. Task 6.
 
 This repository contains a custom application - [telegram bot](screenshots/bot_qr_code.jpg) and it's helm chart for deployment, as well as Jenkins Pipeline.
 I've hadcoded all API keys, because it is not a purpose of this task to make it secure.
+Don't worry, at the moment you read this, all API keys are deleted already.
 In production, of course, you need to use secrets.
 
 ## Bot testing
