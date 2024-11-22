@@ -1,5 +1,5 @@
 pipeline {
-    agent any  // You can specify a specific agent if needed 
+    agent any  // You can specify a specific agent if needed
 
     environment {
         ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
