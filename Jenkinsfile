@@ -1,5 +1,5 @@
 pipeline {
-    agent any  // You can specify a specific agent if needed  
+    agent kubernetes  // You can specify a specific agent if needed  
 
     environment {
         ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
@@ -17,6 +17,7 @@ pipeline {
                 script {
                     echo "Building Docker image..."
                     sh """
+                    docker version
                     docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
                     docker images  # Verify it was built
                     """
