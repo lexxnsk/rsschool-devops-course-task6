@@ -5,8 +5,8 @@ I've hadcoded all API keys, because it is not a purpose of this task to make it 
 In production, of course, you need to use secrets.
 
 ## Bot testing
-You're welcome to play a bit with this bot.
-
+<img src="screenshots/bot_qr_code.jpg" width="300" />  
+You're welcome to play a bit with this bot.  
 If it doesn't reply, it means, I've switched off the K3S node to save some money. Idf you really want - ping me and I will switch it on.
 
 
