@@ -19,7 +19,6 @@ pipeline {
                     sh """
                     docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
                     docker images  # Verify it was built
-
                     """
                 }
             }

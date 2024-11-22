@@ -30,6 +30,25 @@ credentialsId:
 renderHelmLabels: true
 
 controller:
+  agent:
+    podTemplate:
+    volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+    volumeMounts:
+      - mountPath: /var/run/docker.sock
+        name: docker-socket
+    enabled: true
+    volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+    volumeMounts:
+      - mountPath: /var/run/docker.sock
+        name: docker-socket
   # -- Used for label app.kubernetes.io/component
   componentName: "jenkins-controller"
   image:
@@ -909,6 +928,15 @@ controller:
 #        hYAzODo1Jt59pcqqKJEas0C/lFJEB3frw4ImNx5fNlJYOpx+ijfQs9m39CevDq0=
 
 agent:
+  podTemplate:
+    volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+    volumeMounts:
+      - mountPath: /var/run/docker.sock
+        name: docker-socket
   volumes:
     - name: docker-socket
       hostPath:
