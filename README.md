@@ -4,6 +4,12 @@ This repository contains a custom application - [telegram bot](screenshots/bot_q
 I've hadcoded all API keys, because it is not a purpose of this task to make it secure.
 In production, of course, you need to use secrets.
 
+## Bot testing
+You're welcome to play a bit with this bot.
+
+If it doesn't reply, it means, I've switched off the K3S node to save some money. Idf you really want - ping me and I will switch it on.
+
+
 ## Manual deployment using local Docker
 - docker build -t tristaprogrammista-bot .
 - docker run -d --name tristaprogrammista-bot tristaprogrammista-bot
