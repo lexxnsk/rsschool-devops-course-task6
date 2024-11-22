@@ -7,7 +7,7 @@ In production, of course, you need to use secrets.
 ## Bot testing
 <img src="screenshots/bot_qr_code.jpg" width="300" />  
 You're welcome to play a bit with this bot.  
-If it doesn't reply, it means, I've switched off the K3S node to save some money. Idf you really want - ping me and I will switch it on.
+If it doesn't reply, it means, I've switched off the K3S node to save some money. If you really want - ping me and I will switch it on.
 
 
 ## Manual deployment using local Docker
