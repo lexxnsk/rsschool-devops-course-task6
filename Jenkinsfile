@@ -78,4 +78,5 @@ pipeline {
     //         // Optional: Add cleanup steps, e.g., remove the Docker container or image if necessary
     //     }
     // }
+    }
 }
