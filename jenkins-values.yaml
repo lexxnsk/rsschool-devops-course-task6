@@ -30,6 +30,31 @@ credentialsId:
 renderHelmLabels: true
 
 controller:
+  jenkinsUrl: "http://localhost:8080"
+  image: "jenkins/jenkins:lts"
+  installPlugins:
+    - docker-workflow:1.28
+  initContainers:
+    - name: install-docker
+      image: "alpine:latest"
+      command:
+        - "sh"
+        - "-c"
+        - |
+          apk add --no-cache \
+            docker-cli \
+            && ln -s /usr/bin/docker /usr/local/bin/docker
+      volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-socket
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock
+        type: Socket
+  volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-socket
   agent:
     podTemplate:
     volumes:
