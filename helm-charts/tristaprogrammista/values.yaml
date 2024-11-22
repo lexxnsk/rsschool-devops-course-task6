@@ -1,0 +1,27 @@
+# values.yaml
+replicaCount: 1
+
+image:
+  repository: 864899869895.dkr.ecr.eu-central-1.amazonaws.com/tristaprogrammista-bot-amd64
+  tag: latest
+  pullPolicy: Always
+
+service:
+  name: tristaprogrammista-bot
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+resources: {}
