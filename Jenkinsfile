@@ -79,6 +79,16 @@ pipeline {
     }
 
     post {
+        always {
+            script {
+                // Send success notification to Telegram
+                sh '''
+                    curl -X POST https://api.telegram.org/bot8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk/sendMessage \
+                    -d chat_id=20785620 \
+                    -d text="Always."
+                '''
+            }
+        }
         success {
             script {
                 // Send success notification to Telegram
@@ -96,6 +106,16 @@ pipeline {
                     curl -X POST https://api.telegram.org/bot8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk/sendMessage \
                     -d chat_id=20785620 \
                     -d text="Deployment failed. Please check the logs."
+                '''
+            }
+        }
+        aborted {
+            script {
+                // Send failure notification to Telegram
+                sh '''
+                    curl -X POST https://api.telegram.org/bot8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk/sendMessage \
+                    -d chat_id=20785620 \
+                    -d text="Deployment is aborted. Please check the logs."
                 '''
             }
         }
