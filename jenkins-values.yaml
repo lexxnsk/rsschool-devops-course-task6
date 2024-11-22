@@ -30,50 +30,6 @@ credentialsId:
 renderHelmLabels: true
 
 controller:
-  jenkinsUrl: "http://localhost:8080"
-  image: "jenkins/jenkins:lts"
-  installPlugins:
-    - docker-workflow:1.28
-  initContainers:
-    - name: install-docker
-      image: "alpine:latest"
-      command:
-        - "sh"
-        - "-c"
-        - |
-          apk add --no-cache \
-            docker-cli \
-            && ln -s /usr/bin/docker /usr/local/bin/docker
-      volumeMounts:
-        - mountPath: /var/run/docker.sock
-          name: docker-socket
-  volumes:
-    - name: docker-socket
-      hostPath:
-        path: /var/run/docker.sock
-        type: Socket
-  volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-socket
-  agent:
-    podTemplate:
-    volumes:
-      - name: docker-socket
-        hostPath:
-          path: /var/run/docker.sock
-          type: Socket
-    volumeMounts:
-      - mountPath: /var/run/docker.sock
-        name: docker-socket
-    enabled: true
-    volumes:
-      - name: docker-socket
-        hostPath:
-          path: /var/run/docker.sock
-          type: Socket
-    volumeMounts:
-      - mountPath: /var/run/docker.sock
-        name: docker-socket
   # -- Used for label app.kubernetes.io/component
   componentName: "jenkins-controller"
   image:
@@ -447,8 +403,6 @@ controller:
     - workflow-aggregator:600.vb_57cdd26fdd7
     - git:5.6.0
     - configuration-as-code:1887.v9e47623cb_043
-    - kubernetes
-    - docker-workflow
 
   # If set to false, Jenkins will download the minimum required version of all dependencies.
   # -- Download the minimum required version or latest version of all dependencies
@@ -953,23 +907,6 @@ controller:
 #        hYAzODo1Jt59pcqqKJEas0C/lFJEB3frw4ImNx5fNlJYOpx+ijfQs9m39CevDq0=
 
 agent:
-  podTemplate:
-    volumes:
-      - name: docker-socket
-        hostPath:
-          path: /var/run/docker.sock
-          type: Socket
-    volumeMounts:
-      - mountPath: /var/run/docker.sock
-        name: docker-socket
-  volumes:
-    - name: docker-socket
-      hostPath:
-        path: /var/run/docker.sock
-        type: Socket
-  volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-socket
   # -- Enable Kubernetes plugin jnlp-agent podTemplate
   enabled: true
   # -- The name of the pod template to use for providing default values
