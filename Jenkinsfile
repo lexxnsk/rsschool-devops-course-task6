@@ -63,14 +63,12 @@ spec:
             steps {
                 container('docker') {
                     script {
-                        // Use AWS credentials for authentication
-                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIALS}"]]) {
-                            // Build the Docker image and push to ECR
-                            app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
-                            docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:${AWS_CREDENTIALS}") {
-                                app.push("${env.BUILD_NUMBER}")
-                                app.push("latest")
-                            }
+                        // Build the Docker image and push to ECR
+                        app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
+                        docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:${AWS_CREDENTIALS}") {
+                            app.push("${env.BUILD_NUMBER}")
+                            app.push("latest")
+                        }
                         }
                     }
                 }
