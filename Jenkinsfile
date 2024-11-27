@@ -94,7 +94,7 @@ spec:
                 sh '''
                     curl -X POST https://api.telegram.org/bot8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk/sendMessage \
                     -d chat_id=20785620 \
-                    -d text="Always"
+                    -d text="Always trigger is triggered"
                 '''
             }
         }
@@ -103,7 +103,7 @@ spec:
                 sh '''
                     curl -X POST https://api.telegram.org/bot8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk/sendMessage \
                     -d chat_id=20785620 \
-                    -d text="success"
+                    -d text="Deployment is successful"
                 '''
             }
         }
@@ -112,7 +112,7 @@ spec:
                 sh '''
                     curl -X POST https://api.telegram.org/bot8032258559:AAEDdGjciGE5egx1frzBZFdGViOLq1lPObk/sendMessage \
                     -d chat_id=20785620 \
-                    -d text="failure"
+                    -d text="Deployment is failed"
                 '''
             }
         }
