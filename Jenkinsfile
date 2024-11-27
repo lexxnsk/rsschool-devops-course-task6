@@ -101,7 +101,6 @@ spec:
                 }
             }
         }
-    }
         failure {
             script {
                 sh '''
