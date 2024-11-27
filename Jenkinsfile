@@ -41,6 +41,7 @@ spec:
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -68,18 +69,19 @@ spec:
             }
         }
 
-        stage('Docker image push to ECRR') {
+        stage('Docker image push to ECR') {
         when { expression { params.PUSH_TO_ECR == true } }
-        steps {
-            container('docker') {
-                withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
-                    // Log in to ECR
-                    sh """
-                    aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_REPOSITORY}
-                    """
+            steps {
+                container('docker') {
+                    withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
+                        // Log in to ECR
+                        sh """
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_REPOSITORY}
+                        """
+                    }
+                    // Push Docker image to ECR
+                    sh "docker push ${ECR_REPOSITORY}:${IMAGE_TAG}"
                 }
-                // Push Docker image to ECR
-                sh "docker push ${ECR_REPOSITORY}:${IMAGE_TAG}"
             }
         }
     }
