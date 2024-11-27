@@ -68,7 +68,7 @@ spec:
                         // docker.withRegistry("${ECR_REGISTRY}", 'aws-ecr-credentials') {
                             // app.push("${env.BUILD_NUMBER}")
                             // app.push("latest")
-                        }
+                        // }
                     }
                 }
             }
