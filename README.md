@@ -72,3 +72,7 @@ tristaprogrammista      tristaprogrammista      3               2024-11-22 15:48
 wordpress               wordpress               3               2024-11-09 17:36:57.991983249 +0000 UTC deployed        wordpress-0.1.0                     latest     
 ```
 
+## ECR storage
+<img src="screenshots/awc_ecr.png" width="500" />  
+
+
