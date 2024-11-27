@@ -65,11 +65,6 @@ spec:
                     script {
                         // Use AWS credentials for authentication
                         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIALS}"]]) {
-                            // Authenticate with AWS ECR
-                            sh '''
-                                $(aws ecr get-login --no-include-email --region ${AWS_REGION})
-                            '''
-                            
                             // Build the Docker image and push to ECR
                             app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
                             docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:${AWS_CREDENTIALS}") {
