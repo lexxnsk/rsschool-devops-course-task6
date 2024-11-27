@@ -41,6 +41,7 @@ spec:
     }
 
     environment {
+        AWS_CREDENTIALS = "ecr:eu-central-1:aws"
         ECR_REGISTRY = "https://864899869895.dkr.ecr.eu-central-1.amazonaws.com"
         ECR_REPO = "tristaprogrammista-bot-x86"
         CONTAINER_NAME = "tristaprogrammista-bot-x86"
@@ -62,10 +63,19 @@ spec:
             steps {
                 container('docker') {
                     script {
-                        app = docker.build("docker-repo")
-                        docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:aws") {
-                            app.push("${env.BUILD_NUMBER}")
-                            app.push("latest")
+                        // Use AWS credentials for authentication
+                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIALS}"]]) {
+                            // Authenticate with AWS ECR
+                            sh '''
+                                $(aws ecr get-login --no-include-email --region ${AWS_REGION})
+                            '''
+                            
+                            // Build the Docker image and push to ECR
+                            app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
+                            docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:${AWS_CREDENTIALS}") {
+                                app.push("${env.BUILD_NUMBER}")
+                                app.push("latest")
+                            }
                         }
                     }
                 }
@@ -76,9 +86,6 @@ spec:
             steps {
                 container('helm') {
                     script {
-                        def releaseName = "wordpress"
-                        def chartPath = "./wordpress" 
-
                         sh """
                         helm upgrade --install ${HELM_CHART_NAME} ${HELM_CHART_DIR}
                         """
