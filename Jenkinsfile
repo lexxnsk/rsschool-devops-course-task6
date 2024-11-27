@@ -41,7 +41,6 @@ spec:
     }
 
     environment {
-        AWS_CREDENTIALS = "ecr:eu-central-1:aws"
         ECR_REGISTRY = "https://864899869895.dkr.ecr.eu-central-1.amazonaws.com"
         ECR_REPO = "tristaprogrammista-bot-x86"
         CONTAINER_NAME = "tristaprogrammista-bot-x86"
@@ -63,12 +62,16 @@ spec:
             steps {
                 container('docker') {
                     script {
-                        // Build the Docker image and push to ECR
-                        app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
-                        docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:${AWS_CREDENTIALS}") {
-                            app.push("${env.BUILD_NUMBER}")
-                            app.push("latest")
-                        }
+                        // Inject AWS credentials and authenticate to ECR
+                        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-ecr-credentials']]) {
+                            // Build the Docker image
+                            app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
+
+                            // Push the Docker image to AWS ECR
+                            docker.withRegistry("https://${ECR_REGISTRY}", "ecr:${AWS_REGION}:aws-ecr-credentials") {
+                                app.push("${env.BUILD_NUMBER}")
+                                app.push("latest")
+                            }
                         }
                     }
                 }
@@ -118,4 +121,3 @@ spec:
         }
     }
 }
-
