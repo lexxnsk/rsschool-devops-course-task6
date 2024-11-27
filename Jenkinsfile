@@ -30,7 +30,7 @@ spec:
 
     environment {
         AWS_CREDENTIALS_ID = 'aws-ecr-credentials'
-        ECR_REPOSITORY = "https://864899869895.dkr.ecr.eu-central-1.amazonaws.com/tristaprogrammista-bot-x86"
+        ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
         ECR_REPO = "tristaprogrammista-bot-x86"
         CONTAINER_NAME = "tristaprogrammista-bot-x86"
         IMAGE_TAG = "latest"
@@ -64,8 +64,8 @@ spec:
         stage('Docker image build') {
             steps {
                 container('docker') {
-                    sh "docker build -t ${ECR_REPOSITORY}:${IMAGE_TAG} ."
-                }   
+                    docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
+                    docker images  # Verify it was built                }   
             }
         }
 
