@@ -27,7 +27,10 @@ spec:
     - name: docker-sock
       mountPath: /var/run/docker.sock
     command:
-    - cat
+    - /bin/sh
+    args:
+    - -c
+    - "apk add --no-cache curl && cat"
     tty: true
   volumes:
   - name: docker-sock
