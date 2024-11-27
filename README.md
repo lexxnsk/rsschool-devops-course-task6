@@ -1,4 +1,14 @@
 # The RS School - AWS DevOps Course. Project Documentation. Task 6.
+---
+Dear Reviewer.
+
+I kindly ask for your understanding and a brief extension to finalize my repository review. Due to unforeseen and urgent laptop issues, I was unable to dedicate the necessary time this weekend and finalize everything.
+
+So far, I’ve maintained nearly maximum points, and I’m committed to delivering high-quality work. I would greatly appreciate it if the review could be postponed until the end of this week to allow me to complete the tasks to the best of my ability.
+
+Great thanks in advance for your understanding.
+
+---
 
 This repository contains a custom application - [telegram bot](screenshots/bot_qr_code.jpg) and it's helm chart for deployment, as well as Jenkins Pipeline.
 I've hadcoded all API keys, because it is not a purpose of this task to make it secure.
