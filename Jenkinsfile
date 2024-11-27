@@ -33,7 +33,6 @@ spec:
   - name: docker-sock
     hostPath:
       path: /var/run/docker.sock
-      
 """
         }
     }
@@ -84,6 +83,7 @@ spec:
                 } 
             }
         }
+    }
 
     post {
         always {
@@ -115,4 +115,3 @@ spec:
         }
     }
 }
-    
