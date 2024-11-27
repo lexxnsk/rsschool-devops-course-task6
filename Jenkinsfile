@@ -79,7 +79,7 @@ spec:
                 container('helm') {
                     script {
                         sh """
-                        helm upgrade --install ${HELM_CHART_NAME} ${HELM_CHART_DIR}
+                        helm upgrade --install tristaprogrammista -n tristaprogrammista helm-charts/tristaprogrammista/
                         """
                     }
                 } 
