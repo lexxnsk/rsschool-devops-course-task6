@@ -6,42 +6,31 @@ pipeline {
             yaml """
 apiVersion: v1
 kind: Pod
-metadata:
-  labels:
-    just-a-label: application-deploy
 spec:
+  serviceAccountName: jenkins
   containers:
-  - name: helm
-    image: alpine/helm:3.12.3
+  - name: jenkins-agent
+    image: jenkins/inbound-agent:latest
     command:
     - cat
     tty: true
-  - name: kubectl
-    image: bitnami/kubectl:latest
-    command:
-    - cat
-    tty: true
+    securityContext:
+      privileged: true
   - name: docker
-    image: docker:20.10
-    volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
-    command:
-    - /bin/sh
-    args:
-    - -c
-    - "apk add --no-cache curl && cat"
+    image: docker:dind
+    securityContext:
+      privileged: true
+  - name: helm
+    image: alpine/helm:3.11.1  # Helm container
+    command: ['cat']
     tty: true
-  volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
 """
         }
     }
 
     environment {
-        ECR_REGISTRY = "https://864899869895.dkr.ecr.eu-central-1.amazonaws.com"
+        AWS_CREDENTIALS_ID = 'aws-ecr-credentials'
+        ECR_REPOSITORY = "https://864899869895.dkr.ecr.eu-central-1.amazonaws.com/tristaprogrammista-bot-x86"
         ECR_REPO = "tristaprogrammista-bot-x86"
         CONTAINER_NAME = "tristaprogrammista-bot-x86"
         IMAGE_TAG = "latest"
@@ -58,31 +47,39 @@ spec:
             }
         }
 
-        stage('Docker image build and push to ECR') {
+        stage('Prepare Docker') {
             steps {
                 container('docker') {
-                    script {
-                        // Build the Docker image
-                        app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
-                        // Push the Docker image to AWS ECR
-                        // docker.withRegistry("${ECR_REGISTRY}", 'aws-ecr-credentials') {
-                            // app.push("${env.BUILD_NUMBER}")
-                            // app.push("latest")
-                        // }
-                    }
+                    sh 'dockerd-entrypoint.sh &>/dev/null &'      // Start Docker daemon
+                    sh 'sleep 20'                                 // Wait for Docker to initialize
+                    sh 'apk add --no-cache aws-cli kubectl curl'  // Install AWS CLI and Kubectl
+                    sh 'aws --version'                            // Verify AWS CLI installation
+                    sh 'docker --version'                         // Verify Docker installation
+                    sh 'kubectl version --client'                 // Verify kubectl installation
                 }
             }
         }
 
-        stage('Deployment to K3s with Helm') {
+        stage('Docker image build') {
             steps {
-                container('helm') {
-                    script {
-                        sh """
-                        helm upgrade --install tristaprogrammista -n tristaprogrammista helm-charts/tristaprogrammista/
-                        """
-                    }
-                } 
+                container('docker') {
+                    sh "docker build -t ${ECR_REPOSITORY}:${IMAGE_TAG} ."
+                }   
+            }
+        }
+
+        stage('Docker image push to ECRR') {
+        when { expression { params.PUSH_TO_ECR == true } }
+        steps {
+            container('docker') {
+                withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
+                    // Log in to ECR
+                    sh """
+                    aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_REPOSITORY}
+                    """
+                }
+                // Push Docker image to ECR
+                sh "docker push ${ECR_REPOSITORY}:${IMAGE_TAG}"
             }
         }
     }
