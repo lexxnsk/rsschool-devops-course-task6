@@ -58,7 +58,7 @@ spec:
             }
         }
 
-        stage('Docker image building and pushing to ECR') {
+        stage('Docker image build and push to ECR') {
             steps {
                 container('docker') {
                     script {
@@ -66,7 +66,7 @@ spec:
                         app = docker.build("${ECR_REPO}:${IMAGE_TAG}")
                         // Push the Docker image to AWS ECR
                         docker.withRegistry("${ECR_REGISTRY}", 'aws-ecr-credentials') {
-                            app.push("${env.BUILD_NUMBER}")
+                            // app.push("${env.BUILD_NUMBER}")
                             app.push("latest")
                         }
                     }
