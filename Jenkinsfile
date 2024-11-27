@@ -63,9 +63,13 @@ spec:
 
         stage('Docker image build') {
             steps {
-                container('docker') {
-                    docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
-                    docker images  # Verify it was built                }   
+                script {
+                    // Ensure Docker is available in the container and build the image
+                    docker.build("${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}")
+                    
+                    // Optionally, list the Docker images to verify the build
+                    sh 'docker images'
+                }
             }
         }
 
