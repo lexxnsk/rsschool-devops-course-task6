@@ -167,9 +167,6 @@ spec:
                             python3 send.py
                         ''', returnStdout: true).trim() // Capture the output
 
-                        // Print the output for logging
-                        echo "Output from send.py: ${output}"
-                        
                         // Check if the output contains "work otsosi"
                         if (output.contains('otsosi')) {
                             echo "Success: Output contains 'otsosi'."
