@@ -84,7 +84,7 @@ spec:
                     sh 'kubectl version --client'
                     sh 'docker --version'
                     sh 'aws --version'
-                    sh 'python --version'
+                    sh 'python3 --version'
                 }
             }
         }
@@ -110,7 +110,8 @@ spec:
 
                     // Run the Python script with the loaded environment variables
                     sh '''
-                        python send.py
+                        pip3 install -r requirements.txt
+                        python3 send.py
                     '''
                 }
             }
