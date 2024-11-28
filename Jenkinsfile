@@ -117,6 +117,7 @@ pipeline {
                             pip3 install -r requirements.txt
                             python3 send.py
                         '''
+                    }
                 }
             }
         }
