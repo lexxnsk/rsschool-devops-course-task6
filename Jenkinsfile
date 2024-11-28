@@ -100,31 +100,6 @@ spec:
         //     }
         // }
 
-
-
-
-        // stage('Run Python Script') {
-        //     steps {
-        //         script {
-        //             // Load environment variables from Jenkins
-        //             env.API_ID = credentials('API_ID')
-        //             env.API_HASH = credentials('API_HASH')
-        //             env.PHONE_NUMBER = credentials('PHONE_NUMBER')
-
-        //             // Run the Python script with the loaded environment variables
-        //             withCredentials([file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')]) {
-        //                 sh '''
-        //                     cp "$SESSION_FILE" ./session_name.session
-        //                     python3 -m venv venv
-        //                     . venv/bin/activate
-        //                     pip3 install -r requirements.txt
-        //                     python3 send.py
-        //                 '''
-        //             }
-        //         }
-        //     }
-        // }
-
         stage('Docker image build') {
             steps {
                 script {
@@ -157,16 +132,19 @@ spec:
                         string(credentialsId: 'PHONE_NUMBER', variable: 'PHONE_NUMBER'),
                         file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')
                     ]) {
-                    // Execute the commands and capture the output
-                    def output = sh(script: '''
-                        cp "$SESSION_FILE" ./session_name.session
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install -r requirements.txt
-                        python3 send.py
-                    ''', returnStdout: true).trim() // Capture the output and trim whitespace
-                    // Print the output for logging
-                    echo "Output from send.py: ${output}"
+                        // Suppress output for the first commands
+                        sh '''
+                            cp "$SESSION_FILE" ./session_name.session > /dev/null 2>&1  # Suppress output
+                            python3 -m venv venv > /dev/null 2>&1  # Suppress output
+                            . venv/bin/activate
+                            pip install -r requirements.txt > /dev/null 2>&1  # Suppress output
+                        '''
+
+                        // Capture the output of the Python script
+                        def output = sh(script: 'python3 venv/bin/python send.py', returnStdout: true).trim()
+
+                        // Print the output for logging
+                        echo "Output from send.py: ${output}"
                     }
                 }
             }
