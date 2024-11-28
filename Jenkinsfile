@@ -61,6 +61,7 @@ spec:
 
         stage('SonarQube check') {
             environment {
+                JAVA_HOME = tool 'JDK'
                 scannerHome = tool 'SonarQube';
             }
             steps {
