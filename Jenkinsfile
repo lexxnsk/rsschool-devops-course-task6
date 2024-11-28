@@ -100,6 +100,22 @@ spec:
         //     }
         // }
 
+        stage('Run Python Script') {
+            steps {
+                script {
+                    // Load environment variables from Jenkins
+                    env.API_ID = credentials('API_ID')
+                    env.API_HASH = credentials('API_HASH')
+                    env.PHONE_NUMBER = credentials('PHONE_NUMBER')
+
+                    // Run the Python script with the loaded environment variables
+                    sh '''
+                        python send.py
+                    '''
+                }
+            }
+        }
+        
         stage('Docker image build') {
             steps {
                 script {
