@@ -71,7 +71,7 @@ spec:
                 withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
                     sh """
                     ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.sources=$WORKSPACE/plugin 
+                    -Dsonar.sources=$WORKSPACE
                     """
                 }
             }
