@@ -1,7 +1,6 @@
 pipeline {
     agent {
         kubernetes {
-            label 'docker-build-agent'
             defaultContainer 'docker'
             yaml """
 apiVersion: v1
