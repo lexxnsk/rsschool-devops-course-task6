@@ -129,7 +129,7 @@ spec:
             steps {
                 container('helm') {
                     sh """
-                    helm upgrade --install ${HELM_CHART_NAME} ./${HELM_CHART_DIR}/${HELM_CHART_NAME} \\
+                    helm upgrade --install ${HELM_CHART_NAME} ./${HELM_CHART_DIR}/ \\
                         --set image.repository=${ECR_REGISTRY}/${ECR_REPO} \\
                         --set image.tag=${IMAGE_TAG} \\
                         --namespace ${K3S_NAMESPACE}
