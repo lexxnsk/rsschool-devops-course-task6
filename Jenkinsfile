@@ -50,19 +50,6 @@ spec:
             }
         }
 
-        stage('Prepare Docker container') {
-            steps {
-                script {
-                    sh 'dockerd-entrypoint.sh &>/dev/null &'
-                    sh 'sleep 10'
-                    sh 'apk add --no-cache aws-cli kubectl curl'
-                    sh 'kubectl version --client'
-                    sh 'docker --version'
-                    sh 'aws --version'
-                }
-            }
-        }
-
         stage('SonarQube check') {
             environment {
                 scannerHome = tool 'SonarQube';
@@ -73,6 +60,19 @@ spec:
                     ${scannerHome}/bin/sonar-scanner \
                     -Dsonar.sources=$WORKSPACE
                     """
+                }
+            }
+        }
+
+        stage('Prepare Docker container') {
+            steps {
+                script {
+                    sh 'dockerd-entrypoint.sh &>/dev/null &'
+                    sh 'sleep 10'
+                    sh 'apk add --no-cache aws-cli kubectl curl'
+                    sh 'kubectl version --client'
+                    sh 'docker --version'
+                    sh 'aws --version'
                 }
             }
         }
