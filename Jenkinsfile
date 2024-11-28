@@ -34,8 +34,7 @@ spec:
         IMAGE_TAG = "latest"
         GITHUB_REPO = "https://github.com/lexxnsk/rsschool-devops-course-task6"
         GITHUB_BRANCH = "main"
-        CONTAINER_NAME = "tristaprogrammista-bot-x86"
-        NAMESPACE = "tristaprogrammista"
+        K3S_NAMESPACE = "tristaprogrammista"
         HELM_CHART_NAME = "tristaprogrammista"
         HELM_CHART_DIR = "helm-charts/tristaprogrammista"
         AWS_REGION = "eu-central-1"
@@ -109,7 +108,7 @@ spec:
             }
         }
 
-        stage('Docker image push to ECR') {
+        stage('Push Docker image to ECR') {
             steps {
                 container('docker') {
                     withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
@@ -121,7 +120,22 @@ spec:
                 }
             }
         }
-
+        
+        stage('Deploy to Kubernetes with Helm') {
+            when { expression { params.PUSH_TO_ECR == true } }
+            steps {
+                container('helm') {
+                    sh """
+                    helm upgrade --install ${HELM_CHART_NAME} ./${HELM_CHART_DIR}/${HELM_CHART_NAME} \\
+                        --set image.repository=${ECR_REGISTRY}/${ECR_REPO} \\
+                        --set image.tag=${IMAGE_TAG} \\
+                        -f ./${HELM_CHART_DIR}/${HELM_CHART_NAME}/values.yaml \\
+                        --namespace ${K3S_NAMESPACE}
+                    """
+                }
+            }
+        }
+    }    
         stage('Application Verification') {
             steps {
                 script {
