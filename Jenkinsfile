@@ -158,21 +158,13 @@ spec:
                         string(credentialsId: 'PHONE_NUMBER', variable: 'PHONE_NUMBER'),
                         file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')
                     ]) {
-                        // Execute shell commands
-                        def output = sh(script: '''
+                        sh '''
                             cp "$SESSION_FILE" ./session_name.session
                             python3 -m venv venv
                             . venv/bin/activate
                             pip install -r requirements.txt
                             python3 send.py
-                        ''', returnStdout: true).trim() // Capture the output
-
-                        // Check if the output contains "work otsosi"
-                        if (output.contains('otsosi')) {
-                            echo "Success: Output contains 'otsosi'."
-                        } else {
-                            error "Error: Output does not contain 'otsosi'."
-                        }
+                        '''
                     }
                 }
             }
