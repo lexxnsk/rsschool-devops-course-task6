@@ -140,7 +140,7 @@ spec:
                             pip install -r requirements.txt
                         '''
                         // Capture the output of the Python script
-                        def output = sh(script: 'source venv/bin/activate && python3 send.py', returnStdout: true).trim()
+                        def output = sh(script: 'source venv/bin/activate && python3 send.py && python3 send.py && python3 send.py', returnStdout: true).trim()
                         // Print the output for logging
                         echo "Output from send.py: ${output}"
                         // Analyze the output for the word 'otsosi'
