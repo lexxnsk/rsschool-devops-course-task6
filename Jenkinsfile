@@ -59,21 +59,6 @@ spec:
             }
         }
 
-        stage('Run Python Script') {
-            steps {
-                script {
-                    // Load environment variables from Jenkins credentials
-                    env.API_ID = credentials('API_ID')
-                    env.API_HASH = credentials('API_HASH')
-                    env.PHONE_NUMBER = credentials('PHONE_NUMBER')
-
-                    // Run the Python script with the loaded environment variables
-                    sh '''
-                        python send.py
-                    '''
-                }
-            }
-        }
 
         // stage('SonarQube check') {
         //     environment {
@@ -95,10 +80,11 @@ spec:
                 script {
                     sh 'dockerd-entrypoint.sh &>/dev/null &'
                     sh 'sleep 10'
-                    sh 'apk add --no-cache aws-cli kubectl curl'
+                    sh 'apk add --no-cache aws-cli kubectl curl python'
                     sh 'kubectl version --client'
                     sh 'docker --version'
                     sh 'aws --version'
+                    sh 'python --version'
                 }
             }
         }
