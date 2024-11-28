@@ -134,11 +134,13 @@ spec:
         }
         failure {
             script {
-                sh '''
-                    curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-                    -d chat_id=20785620 \
-                    -d text="Deployment is failed"
-                '''
+                withCredentials([string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN')]) {
+                    sh '''
+                        curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+                            -d chat_id=20785620 \
+                            -d text="Deployment is failed"
+                    '''
+                }
             }
         }
     }
