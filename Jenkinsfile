@@ -110,6 +110,8 @@ spec:
 
                     // Run the Python script with the loaded environment variables
                     sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
                         pip3 install -r requirements.txt
                         python3 send.py
                     '''
