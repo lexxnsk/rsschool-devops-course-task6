@@ -165,6 +165,8 @@ spec:
                         pip install -r requirements.txt
                         python3 send.py
                     ''', returnStdout: true).trim() // Capture the output and trim whitespace
+                    // Print the output for logging
+                    echo "Output from send.py: ${output}"
                     }
                 }
             }
