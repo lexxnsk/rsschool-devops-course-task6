@@ -37,7 +37,7 @@ spec:
         IMAGE_TAG = "latest"
         GITHUB_REPO = "https://github.com/lexxnsk/rsschool-devops-course-task6"
         GITHUB_BRANCH = "main"
-        K3S_NAMESPACE = "tristaprogrammista"
+        K3S_NAMESPACE = "jenkins"
         HELM_CHART_NAME = "tristaprogrammista"
         HELM_CHART_DIR = "helm-charts/tristaprogrammista"
         AWS_REGION = "eu-central-1"
