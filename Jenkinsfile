@@ -8,13 +8,6 @@ kind: Pod
 spec:
   serviceAccountName: jenkins
   containers:
-  - name: jenkins-agent
-    image: jenkins/inbound-agent:latest
-    command:
-    - cat
-    tty: true
-    securityContext:
-      privileged: true
   - name: docker
     image: docker:dind
     securityContext:
@@ -52,16 +45,6 @@ spec:
             }
         }
 
-        stage('Install curl to the Docker container') {
-            steps {
-                script {
-                    sh 'apk add --no-cache curl'
-                    sh 'curl --version'
-                }
-            }
-        }
-
-
         // stage('SonarQube check') {
         //     environment {
         //         JAVA_HOME = tool 'JDK'
@@ -77,7 +60,7 @@ spec:
         //     }
         // }
 
-        stage('Prepare Docker container') {
+        stage('Install necessary packets to the Docker container') {
             steps {
                 script {
                     sh 'dockerd-entrypoint.sh &>/dev/null &'
@@ -102,7 +85,7 @@ spec:
         //     }
         // }
 
-        stage('Docker image build') {
+        stage('Build Docker image') {
             steps {
                 script {
                     docker.build("${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}")
@@ -111,7 +94,7 @@ spec:
             }
         }
 
-        stage('Push Docker image to ECR') {
+        stage('Push Docker image to AWS ECR') {
             steps {
                 container('docker') {
                     withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
@@ -124,7 +107,7 @@ spec:
             }
         }
         
-        stage('Deploy to Kubernetes with Helm') {
+        stage('Deploy Application to K3S using Helm') {
             when { expression { params.PUSH_TO_ECR == true } }
             steps {
                 container('helm') {
@@ -138,28 +121,23 @@ spec:
             }
         }
         
-        stage('Application Verification') {
+        stage('Verify Application') {
             steps {
                 script {
-                    // Load environment variables from Jenkins
                     withCredentials([
                         string(credentialsId: 'API_ID', variable: 'API_ID'),
                         string(credentialsId: 'API_HASH', variable: 'API_HASH'),
                         string(credentialsId: 'PHONE_NUMBER', variable: 'PHONE_NUMBER'),
                         file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')
                     ]) {
-                        // Suppress output for the first commands
                         sh '''
                             cp "$SESSION_FILE" ./session_name.session
                             python3 -m venv venv
                             . venv/bin/activate
                             pip install -r requirements.txt
                         '''
-                        // Capture the output of the Python script
                         def output = sh(script: 'source venv/bin/activate && python3 send.py && python3 send.py && python3 send.py', returnStdout: true).trim()
-                        // Print the output for logging
                         echo "Output from send.py: ${output}"
-                        // Analyze the output for the word 'otsosi'
                         if (output.contains('otsosi')) {
                             echo "Success: The output contains 'otsosi'."
                         } else {
