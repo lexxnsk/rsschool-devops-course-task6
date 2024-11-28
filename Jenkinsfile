@@ -30,6 +30,7 @@ spec:
     environment {
         AWS_CREDENTIALS_ID = 'aws-ecr-credentials'
         ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
+        ECR_REPOSITORY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
         ECR_REPO = "tristaprogrammista-bot-x86"
         GITHUB_REPO = "https://github.com/lexxnsk/rsschool-devops-course-task6"
         GITHUB_BRANCH = "main"
