@@ -100,27 +100,50 @@ spec:
         //     }
         // }
 
+
         stage('Run Python Script') {
             steps {
                 script {
                     // Load environment variables from Jenkins
-                    env.API_ID = credentials('API_ID')
-                    env.API_HASH = credentials('API_HASH')
-                    env.PHONE_NUMBER = credentials('PHONE_NUMBER')
-
-                    // Run the Python script with the loaded environment variables
-                    withCredentials([file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')]) {
+                    withCredentials([
+                        string(credentialsId: 'API_ID', variable: 'API_ID'),
+                        string(credentialsId: 'API_HASH', variable: 'API_HASH'),
+                        string(credentialsId: 'PHONE_NUMBER', variable: 'PHONE_NUMBER'),
+                        file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')
+                    ]) {
                         sh '''
                             cp "$SESSION_FILE" ./session_name.session
                             python3 -m venv venv
                             . venv/bin/activate
-                            pip3 install -r requirements.txt
+                            pip install -r requirements.txt
                             python3 send.py
                         '''
                     }
                 }
             }
         }
+
+        // stage('Run Python Script') {
+        //     steps {
+        //         script {
+        //             // Load environment variables from Jenkins
+        //             env.API_ID = credentials('API_ID')
+        //             env.API_HASH = credentials('API_HASH')
+        //             env.PHONE_NUMBER = credentials('PHONE_NUMBER')
+
+        //             // Run the Python script with the loaded environment variables
+        //             withCredentials([file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')]) {
+        //                 sh '''
+        //                     cp "$SESSION_FILE" ./session_name.session
+        //                     python3 -m venv venv
+        //                     . venv/bin/activate
+        //                     pip3 install -r requirements.txt
+        //                     python3 send.py
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Docker image build') {
             steps {
