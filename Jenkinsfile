@@ -109,12 +109,14 @@ spec:
                     env.PHONE_NUMBER = credentials('PHONE_NUMBER')
 
                     // Run the Python script with the loaded environment variables
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip3 install -r requirements.txt
-                        python3 send.py
-                    '''
+                    withCredentials([file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')]) {
+                        sh '''
+                            cp "$SESSION_FILE" ./session_name.session
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            pip3 install -r requirements.txt
+                            python3 send.py
+                        '''
                 }
             }
         }
