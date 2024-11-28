@@ -3,27 +3,27 @@ pipeline {
         kubernetes {
             defaultContainer 'docker'
             yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  serviceAccountName: jenkins
-  containers:
-  - name: jenkins-agent
-    image: jenkins/inbound-agent:latest
-    command:
-    - cat
-    tty: true
-    securityContext:
-      privileged: true
-  - name: docker
-    image: docker:dind
-    securityContext:
-      privileged: true
-  - name: helm
-    image: alpine/helm:3.11.1  # Helm container
-    command: ['cat']
-    tty: true
-"""
+                apiVersion: v1
+                kind: Pod
+                spec:
+                serviceAccountName: jenkins
+                containers:
+                - name: jenkins-agent
+                    image: jenkins/inbound-agent:latest
+                    command:
+                    - cat
+                    tty: true
+                    securityContext:
+                    privileged: true
+                - name: docker
+                    image: docker:dind
+                    securityContext:
+                    privileged: true
+                - name: helm
+                    image: alpine/helm:3.11.1  # Helm container
+                    command: ['cat']
+                    tty: true
+                """
         }
     }
 
