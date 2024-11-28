@@ -35,6 +35,8 @@ spec:
         HELM_CHART_DIR = "helm-charts/tristaprogrammista"
         AWS_REGION = "eu-central-1"
         WORKSPACE = "./"
+        JAVA_HOME = '/opt/java/openjdk'  // Make sure this points to your Java installation
+        PATH = "${JAVA_HOME}/bin:${PATH}"
     }
 
     stages {
