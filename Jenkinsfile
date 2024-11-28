@@ -59,16 +59,27 @@ spec:
             }
         }
 
-        stage('SonarQube check') {
-            steps {
-                withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
-                    sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.sources=$WORKSPACE
-                    """
-                }
+        stage('SonarQube analysis') {
+            def scannerHome = tool name: 'sonar_scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation';
+            withSonarQubeEnv('SonarQube') { 
+            sh "${scannerHome}/bin/sonar-scanner"
             }
         }
+
+
+        // stage('SonarQube check') {
+        //     environment {
+        //         scannerHome = tool 'SonarQube';
+        //     }
+        //     steps {
+        //         withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
+        //             sh """
+        //             ${scannerHome}/bin/sonar-scanner \
+        //             -Dsonar.sources=$WORKSPACE
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Prepare Docker container') {
             steps {
