@@ -126,7 +126,7 @@ spec:
         failure {
             script {
                 sh '''
-                    curl -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+                    curl -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                     -d chat_id=20785620 \
                     -d text="Deployment is failed"
                 '''
