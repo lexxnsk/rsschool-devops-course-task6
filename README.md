@@ -2,11 +2,9 @@
 ---
 Dear Reviewer.
 
-I kindly ask for your understanding and a brief extension to finalize my repository review. Due to unforeseen and urgent laptop issues, I was unable to dedicate the necessary time this weekend and finalize everything.
-
+~~I kindly ask for your understanding and a brief extension to finalize my repository review. Due to unforeseen and urgent laptop issues, I was unable to dedicate the necessary time this weekend and finalize everything.
 So far, I’ve maintained nearly maximum points, and I’m committed to delivering high-quality work. I would greatly appreciate it if the review could be postponed until the end of this week to allow me to complete the tasks to the best of my ability.
-~~This was mistaken text~~
-Great thanks in advance for your understanding.
+Great thanks in advance for your understanding.~~
 
 **UPDATE:  
 The task is complete. Thank you for granting me extra time to finish it. I truly appreciate it.  
