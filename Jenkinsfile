@@ -44,6 +44,14 @@ spec:
                 checkout scm
             }
         }
+        stage('Install curl to the Docker container') {
+            steps {
+                script {
+                    sh 'apk add --no-cache curl'
+                    sh 'curl --version'
+                }
+            }
+        }
 
         stage('SonarQube check') {
             environment {
