@@ -59,7 +59,6 @@ spec:
             }
         }
 
-stages {
         stage('Run Python Script') {
             steps {
                 script {
@@ -75,7 +74,6 @@ stages {
                 }
             }
         }
-    }
 
         // stage('SonarQube check') {
         //     environment {
