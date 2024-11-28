@@ -146,7 +146,6 @@ spec:
                 }
             }
         }
-    }
 
         stage('Application Verification') {
             steps {
@@ -170,6 +169,7 @@ spec:
                 }
             }
         }
+    }
 
     post {
         success {
