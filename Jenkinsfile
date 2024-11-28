@@ -80,7 +80,7 @@ spec:
                 script {
                     sh 'dockerd-entrypoint.sh &>/dev/null &'
                     sh 'sleep 10'
-                    sh 'apk add --no-cache aws-cli kubectl curl python'
+                    sh 'apk add --no-cache aws-cli kubectl curl python3 py3-pip'
                     sh 'kubectl version --client'
                     sh 'docker --version'
                     sh 'aws --version'
@@ -115,7 +115,7 @@ spec:
                 }
             }
         }
-        
+
         stage('Docker image build') {
             steps {
                 script {
