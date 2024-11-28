@@ -75,4 +75,5 @@ wordpress               wordpress               3               2024-11-09 17:36
 ## ECR storage
 <img src="screenshots/awc_ecr.png" width="500" />  
 
-
+## Notifications
+<img src="screenshots/notification_system.png" width="500" />  
