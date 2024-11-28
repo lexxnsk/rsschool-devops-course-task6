@@ -60,9 +60,6 @@ spec:
         }
 
         stage('SonarQube check') {
-            environment {
-                scannerHome = tool 'SonarQube';
-            }
             steps {
                 withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
                     sh """
