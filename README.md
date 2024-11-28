@@ -8,11 +8,12 @@ So far, I’ve maintained nearly maximum points, and I’m committed to deliveri
 
 Great thanks in advance for your understanding.
 
-**UPDATE: Task is done. Thanks for giving me additional time to finish it. I appreciate it from the bottom of my heart.
-You can check it now. Everything is done, except SonarQube check, so I deduct 5 point for it.
-So current total point is 95/100.
-If you give me more time, may be I will add SonarQube check as well.
-**
+**UPDATE:  
+The task is complete. Thank you for granting me extra time to finish it. I truly appreciate it.  
+You can review it now.  
+Everything is done except for the SonarQube check.  
+I’ve deducted 5 points for this, making the current total score 95/100.  
+If additional time is provided, I might include the SonarQube check as well.**
 ---
 
 This repository contains a custom application - [telegram bot](screenshots/bot_qr_code.jpg) and it's helm chart for deployment, as well as Jenkins Pipeline.
