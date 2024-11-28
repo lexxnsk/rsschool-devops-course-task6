@@ -30,12 +30,11 @@ spec:
     environment {
         AWS_CREDENTIALS_ID = 'aws-ecr-credentials'
         ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
-        ECR_REPOSITORY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
         ECR_REPO = "tristaprogrammista-bot-x86"
+        IMAGE_TAG = "latest"
         GITHUB_REPO = "https://github.com/lexxnsk/rsschool-devops-course-task6"
         GITHUB_BRANCH = "main"
         CONTAINER_NAME = "tristaprogrammista-bot-x86"
-        IMAGE_TAG = "latest"
         NAMESPACE = "tristaprogrammista"
         HELM_CHART_NAME = "tristaprogrammista"
         HELM_CHART_DIR = "helm-charts/tristaprogrammista"
@@ -140,10 +139,10 @@ spec:
                 container('docker') {
                     withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
                         sh """
-                        aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_REPOSITORY}
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_REGISTRY}
                         """
                     }
-                    sh "docker push ${ECR_REPOSITORY}:${IMAGE_TAG}"
+                    sh "docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}"
                 }
             }
         }
