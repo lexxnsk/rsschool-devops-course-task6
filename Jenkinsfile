@@ -59,20 +59,38 @@ spec:
             }
         }
 
-        stage('SonarQube check') {
-            environment {
-                JAVA_HOME = tool 'JDK'
-                scannerHome = tool 'SonarQube';
-            }
+stages {
+        stage('Run Python Script') {
             steps {
-                withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
-                    sh """
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.sources=$WORKSPACE
-                    """
+                script {
+                    // Load environment variables from Jenkins credentials
+                    env.API_ID = credentials('API_ID')
+                    env.API_HASH = credentials('API_HASH')
+                    env.PHONE_NUMBER = credentials('PHONE_NUMBER')
+
+                    // Run the Python script with the loaded environment variables
+                    sh '''
+                        python send.py
+                    '''
                 }
             }
         }
+    }
+
+        // stage('SonarQube check') {
+        //     environment {
+        //         JAVA_HOME = tool 'JDK'
+        //         scannerHome = tool 'SonarQube';
+        //     }
+        //     steps {
+        //         withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
+        //             sh """
+        //             ${scannerHome}/bin/sonar-scanner \
+        //             -Dsonar.sources=$WORKSPACE
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Prepare Docker container') {
             steps {
@@ -86,7 +104,7 @@ spec:
                 }
             }
         }
-        
+
 
         // stage('Unitaty Tests') {  
         //     steps {
