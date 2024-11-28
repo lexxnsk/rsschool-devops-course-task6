@@ -51,6 +51,11 @@ spec:
                 script {
                     sh 'apk add --no-cache curl'
                     sh 'curl --version'
+                    sh 'java -version'
+                    // Install OpenJDK (for example, version 17)
+                    sh 'apk add --no-cache openjdk17'
+                    // Verify Java installation
+                    sh 'java -version'
                 }
             }
         }
