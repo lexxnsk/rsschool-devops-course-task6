@@ -158,13 +158,14 @@ spec:
                         string(credentialsId: 'PHONE_NUMBER', variable: 'PHONE_NUMBER'),
                         file(credentialsId: 'SESSION_FILE', variable: 'SESSION_FILE')
                     ]) {
-                        sh '''
-                            cp "$SESSION_FILE" ./session_name.session
-                            python3 -m venv venv
-                            . venv/bin/activate
-                            pip install -r requirements.txt
-                            python3 send.py
-                        '''
+                    // Execute the commands and capture the output
+                    def output = sh(script: '''
+                        cp "$SESSION_FILE" ./session_name.session
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install -r requirements.txt
+                        python3 send.py
+                    ''', returnStdout: true).trim() // Capture the output and trim whitespace
                     }
                 }
             }
