@@ -45,20 +45,20 @@ spec:
             }
         }
 
-        // stage('SonarQube check') {
-        //     environment {
-        //         JAVA_HOME = tool 'JDK'
-        //         scannerHome = tool 'SonarQube';
-        //     }
-        //     steps {
-        //         withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
-        //             sh """
-        //             ${scannerHome}/bin/sonar-scanner \
-        //             -Dsonar.sources=$WORKSPACE
-        //             """
-        //         }
-        //     }
-        // }
+        stage('SonarQube check') {
+            environment {
+                JAVA_HOME = tool 'JDK'
+                scannerHome = tool 'SonarQube';
+            }
+            steps {
+                withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
+                    sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.sources=$WORKSPACE
+                    """
+                }
+            }
+        }
 
         stage('Install necessary packets to the Docker container') {
             steps {
