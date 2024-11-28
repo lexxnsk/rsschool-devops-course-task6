@@ -134,10 +134,10 @@ spec:
                     ]) {
                         // Suppress output for the first commands
                         sh '''
-                            cp "$SESSION_FILE" ./session_name.session > /dev/null 2>&1  # Suppress output
-                            python3 -m venv venv > /dev/null 2>&1  # Suppress output
+                            cp "$SESSION_FILE" ./session_name.session
+                            python3 -m venv venv
                             . venv/bin/activate
-                            pip install -r requirements.txt > /dev/null 2>&1  # Suppress output
+                            pip install -r requirements.txt
                         '''
 
                         // Capture the output of the Python script
