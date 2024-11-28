@@ -135,7 +135,7 @@ spec:
                 }
             }
         }
-    }    
+        
         stage('Application Verification') {
             steps {
                 script {
