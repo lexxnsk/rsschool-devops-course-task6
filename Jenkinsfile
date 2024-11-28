@@ -27,6 +27,9 @@ spec:
         }
     }
 
+    parameters {
+        booleanParam(name: 'PUSH_TO_ECR', defaultValue: true, description: 'Should we push the Docker image to ECR?')
+    }
     environment {
         AWS_CREDENTIALS_ID = 'aws-ecr-credentials'
         ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
