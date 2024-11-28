@@ -87,17 +87,6 @@ spec:
             }
         }
 
-
-        // stage('Unitaty Tests') {  
-        //     steps {
-        //         git url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
-        //         container('docker') {
-        //             sh "docker build -t word-cloud-generator-builder -f Dockerfile --target builder ."  
-        //             sh "docker run --rm word-cloud-generator-builder go test -v ./..." 
-        //         }
-        //     }
-        // }
-
         stage('Build Docker image') {
             steps {
                 script {
