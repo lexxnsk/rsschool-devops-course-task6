@@ -132,7 +132,6 @@ spec:
                     helm upgrade --install ${HELM_CHART_NAME} ./${HELM_CHART_DIR}/${HELM_CHART_NAME} \\
                         --set image.repository=${ECR_REGISTRY}/${ECR_REPO} \\
                         --set image.tag=${IMAGE_TAG} \\
-                        -f ./${HELM_CHART_DIR}/${HELM_CHART_NAME}/values.yaml \\
                         --namespace ${K3S_NAMESPACE}
                     """
                 }
