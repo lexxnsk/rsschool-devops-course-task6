@@ -131,7 +131,6 @@ spec:
         }
 
         stage('Docker image push to ECR') {
-        when { expression { params.PUSH_TO_ECR == true } }
             steps {
                 container('docker') {
                     withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
