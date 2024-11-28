@@ -32,12 +32,15 @@ spec:
         AWS_CREDENTIALS_ID = 'aws-ecr-credentials'
         ECR_REGISTRY = "864899869895.dkr.ecr.eu-central-1.amazonaws.com"
         ECR_REPO = "tristaprogrammista-bot-x86"
+        GITHUB_REPO = "https://github.com/lexxnsk/rsschool-devops-course-task6"
+        GITHUB_BRANCH = "main"
         CONTAINER_NAME = "tristaprogrammista-bot-x86"
         IMAGE_TAG = "latest"
         NAMESPACE = "tristaprogrammista"
         HELM_CHART_NAME = "tristaprogrammista"
         HELM_CHART_DIR = "helm-charts/tristaprogrammista"
         AWS_REGION = "eu-central-1"
+        WORKSPACE = "./"
     }
 
     stages {
@@ -48,25 +51,47 @@ spec:
             }
         }
 
-        stage('Prepare Docker') {
+        stage('Prepare Docker container') {
             steps {
                 script {
-                    sh 'dockerd-entrypoint.sh &>/dev/null &'      // Start Docker daemon
-                    sh 'sleep 20'                                 // Wait for Docker to initialize
-                    sh 'apk add --no-cache aws-cli kubectl curl'  // Install AWS CLI and Kubectl
-                    sh 'aws --version'                            // Verify AWS CLI installation
-                    sh 'docker --version'                         // Verify Docker installation
-                    sh 'kubectl version --client'                 // Verify kubectl installation
+                    sh 'dockerd-entrypoint.sh &>/dev/null &'
+                    sh 'sleep 10'
+                    sh 'apk add --no-cache aws-cli kubectl curl'
+                    sh 'kubectl version --client'
+                    sh 'docker --version'
+                    sh 'aws --version'
                 }
             }
         }
 
+        stage('SonarQube check') {
+            environment {
+                scannerHome = tool 'SonarQube';
+            }
+            steps {
+                withSonarQubeEnv(credentialsId: 'SonarQube', installationName: 'SonarQube') {
+                    sh """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.sources=$WORKSPACE/plugin 
+                    """
+                }
+            }
+        }
+
+        // stage('Unitaty Tests') {  
+        //     steps {
+        //         git url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
+        //         container('docker') {
+        //             sh "docker build -t word-cloud-generator-builder -f Dockerfile --target builder ."  
+        //             sh "docker run --rm word-cloud-generator-builder go test -v ./..." 
+        //         }
+        //     }
+        // }
+
         stage('Docker image build') {
             steps {
                 script {
-                    // Ensure Docker is available in the container and build the image
                     docker.build("${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}")
-                    // Optionally, list the Docker images to verify the build
                     sh 'docker images'
                 }
             }
@@ -77,12 +102,10 @@ spec:
             steps {
                 container('docker') {
                     withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}")]) {
-                        // Log in to ECR
                         sh """
                         aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_REPOSITORY}
                         """
                     }
-                    // Push Docker image to ECR
                     sh "docker push ${ECR_REPOSITORY}:${IMAGE_TAG}"
                 }
             }
