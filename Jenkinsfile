@@ -16,7 +16,7 @@ spec:
     }
 
     environment {
-        PROMETHEUS_PORT = "32003"
+        PROMETHEUS_PORT = "32002"
         K3S_NAMESPACE = "jenkins"
     }
 
