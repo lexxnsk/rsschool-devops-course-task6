@@ -16,6 +16,7 @@ spec:
     }
 
     environment {
+        PROMETHEUS_PORT = "32003"
         K3S_NAMESPACE = "jenkins"
     }
 
@@ -35,7 +36,7 @@ spec:
                     helm repo update
                     helm upgrade --install prometheus bitnami/kube-prometheus \\
                     --set prometheus.service.type=NodePort \\
-                    --set prometheus.service.nodePorts.http=32002 \\
+                    --set prometheus.service.nodePorts.http=${PROMETHEUS_PORT} \\
                     --namespace ${K3S_NAMESPACE}
                     """
                 }
