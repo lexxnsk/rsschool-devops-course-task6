@@ -9,7 +9,7 @@ The provided code snippet demonstrates how to deploy Prometheus in a Kubernetes 
 - helm repo update
 - helm upgrade --install prometheus bitnami/kube-prometheus \
     --set prometheus.service.type=NodePort \
-    --set prometheus.service.nodePorts.http=32002 \
+    --set prometheus.service.nodePorts.http=32002
 
 ## Granting necessary permissions to Jenkins
 To ensure the successful execution of the Jenkins pipeline, we need to grant the necessary permissions to Jenkins.
