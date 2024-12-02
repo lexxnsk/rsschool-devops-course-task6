@@ -7,9 +7,9 @@ This repository branch contains a Jenkins Pipeline along with the required confi
 The provided code snippet demonstrates how to deploy Grafana in a Kubernetes cluster using Helm, a package manager for Kubernetes. It involves adding the Bitnami Helm repository, updating the repository index, and using the helm upgrade --install command to deploy the kube-prometheus chart.
 - helm repo add bitnami https://charts.bitnami.com/bitnami
 - helm repo update
-- helm upgrade --install prometheus bitnami/kube-prometheus \
-    --set prometheus.service.type=NodePort \
-    --set prometheus.service.nodePorts.http=32002
+- helm upgrade --install grafana bitnami/grafana \
+    --set service.type=NodePort \
+    --set service.nodePorts.grafana=32003
 
 ## Granting necessary permissions to Jenkins
 To ensure the successful execution of the Jenkins pipeline, we need to grant the necessary permissions to Jenkins.
@@ -23,10 +23,6 @@ An NGINX reverse proxy with TLS certificates is deployed on the Bastion host to 
 Here is an example of related NGINX proxy config:
 ```
 server {
-    if ($host = grafana.rss.myslivets.ru) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
-
 
     server_name grafana.rss.myslivets.ru;
 
@@ -95,5 +91,15 @@ If you like Certbot, please consider supporting our work by:
  * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
  * Donating to EFF:                    https://eff.org/donate-le
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+```
+
+## Grafana default user and password.
+In order to get the admin credentials, you just need to do this:
+```
+2. Get the admin credentials:
+
+    echo "User: admin"
+    echo "Password: $(kubectl get secret grafana-admin --namespace jenkins -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
 
 ```

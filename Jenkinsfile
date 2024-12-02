@@ -16,7 +16,7 @@ spec:
     }
 
     environment {
-        PROMETHEUS_PORT = "32002"
+        GRAFANA_PORT = "32003"
         K3S_NAMESPACE = "jenkins"
     }
 
@@ -34,9 +34,9 @@ spec:
                     sh """
                     helm repo add bitnami https://charts.bitnami.com/bitnami
                     helm repo update
-                    helm upgrade --install prometheus bitnami/kube-prometheus \\
-                    --set prometheus.service.type=NodePort \\
-                    --set prometheus.service.nodePorts.http=${PROMETHEUS_PORT} \\
+                    helm upgrade --install grafana bitnami/grafana \\
+                    --set service.type=NodePort \\
+                    --set service.nodePorts.grafana=${GRAFANA_PORT} \\
                     --namespace ${K3S_NAMESPACE}
                     """
                 }
