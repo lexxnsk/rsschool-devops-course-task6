@@ -117,19 +117,20 @@ Best option is to keep password in Jenkins Secrets (I've created a variable call
         stage('Deploy Application to K3S using Helm') {
             steps {
                 container('helm') {
-                    sh """
-                    helm repo add bitnami https://charts.bitnami.com/bitnami
-                    helm repo update
-                    helm upgrade --install grafana bitnami/grafana \\
-                    --set service.type=NodePort \\
-                    --set service.nodePorts.grafana=${GRAFANA_PORT} \\
-                    --set admin.password=${GRAFANA_ADMIN_PASSWORD} \\
-                    --namespace ${K3S_NAMESPACE}
-                    """
+                    withCredentials([string(credentialsId: 'GRAFANA_ADMIN_PASSWORD', variable: 'GRAFANA_ADMIN_PASSWORD')]) {
+                        sh """
+                        helm repo add bitnami https://charts.bitnami.com/bitnami
+                        helm repo update
+                        helm upgrade --install grafana bitnami/grafana \\
+                        --set service.type=NodePort \\
+                        --set service.nodePorts.grafana=${GRAFANA_PORT} \\
+                        --set admin.password=${GRAFANA_ADMIN_PASSWORD} \\
+                        --namespace ${K3S_NAMESPACE}
+                        """
+                    }
                 }
             }
         }
-    }
 ```
 
 ## Problem met
