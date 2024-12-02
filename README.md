@@ -92,7 +92,7 @@ If you like Certbot, please consider supporting our work by:
 
 ```
 
-## Grafana default user and password.
+## Grafana default user and password
 In order to get the admin credentials, you just need to do this:
 ```
 2. Get the admin credentials:
@@ -128,6 +128,17 @@ Best option is to keep password in Jenkins Secrets (I've created a variable call
             }
         }
 ```
+
+## DashBoard Creation and import
+After installing Grafana, the first step is to add a data source, which in this case is Prometheus. You can then create a dashboard and add the necessary graphs. However, issues may arise when importing a dashboard from JSON if it contains a different UID value for the data source. For example, you might find a section like this in the JSON:
+```
+          "datasource": {
+            "type": "prometheus",
+            "uid": "be5pzha6p61vka"
+```
+To successfully connect your dashboard to the Prometheus data source, you need to update this UID to match the UID of your current Prometheus instance. You can find the correct UID by navigating to your Prometheus data source settings in Grafana:
+<img width="1392" alt="Screenshot 2024-12-02 at 18 01 16" src="https://github.com/user-attachments/assets/3d6a5116-391f-4b37-9e7e-83d1df9427e9">
+
 
 ## Problem met
 During this task, I encountered an issue with a failing Jenkins pod when running a pipeline, which was caused by insufficient disk space. The problem was resolved by increasing the disk space and extending the filesystem.
