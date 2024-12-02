@@ -143,3 +143,6 @@ ec2-user@ip-10-0-2-10:~> df -h /dev/nvme0n1p3
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/nvme0n1p3   30G  8.2G   22G  28% /
 ```
+<img width="654" alt="disk_size_plus20G" src="https://github.com/user-attachments/assets/a978e319-b2dc-44a1-a3f9-d02922fe3c1f">
+
+
