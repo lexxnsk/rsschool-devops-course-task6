@@ -12,10 +12,6 @@ The provided code snippet demonstrates how to deploy Grafana in a Kubernetes clu
     --set service.nodePorts.grafana=32003 \
     --set admin.password=admin
 
-## Granting necessary permissions to Jenkins
-To ensure the successful execution of the Jenkins pipeline, we need to grant the necessary permissions to Jenkins.
-- kubectl apply -f jenkins-role.yaml
-
 ## Automated deployment using Jenkins
 The Git repository includes a Jenkinsfile that defines a straightforward pipeline. This pipeline is triggered automatically every time changes are pushed to the GitHub repository. A webhook is configured to establish this connection between GitHub and Jenkins, ensuring that the pipeline executes seamlessly with each update.
 Detailed Jenkins configuration was described in previous tasks.
