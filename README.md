@@ -9,7 +9,8 @@ The provided code snippet demonstrates how to deploy Grafana in a Kubernetes clu
 - helm repo update
 - helm upgrade --install grafana bitnami/grafana \
     --set service.type=NodePort \
-    --set service.nodePorts.grafana=32003
+    --set service.nodePorts.grafana=32003 \
+    --set admin.password=admin
 
 ## Granting necessary permissions to Jenkins
 To ensure the successful execution of the Jenkins pipeline, we need to grant the necessary permissions to Jenkins.
@@ -103,6 +104,32 @@ In order to get the admin credentials, you just need to do this:
     echo "User: admin"
     echo "Password: $(kubectl get secret grafana-admin --namespace jenkins -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
 
+```
+Also you can deploy manually and specify admin password as a parameter:
+```
+amyslivets@MacBook-Air-Alex rsschool-devops-course-task6 % - helm upgrade --install grafana bitnami/grafana \
+    --set service.type=NodePort \
+    --set service.nodePorts.grafana=32003 \
+    --set admin.password=admin
+```
+Best option is to keep password in Jenkins Secrets (I've created a variable called GRAFANA_ADMIN_PASSWORD) and use it in Jenkins Pipeline as a variable:
+```
+        stage('Deploy Application to K3S using Helm') {
+            steps {
+                container('helm') {
+                    sh """
+                    helm repo add bitnami https://charts.bitnami.com/bitnami
+                    helm repo update
+                    helm upgrade --install grafana bitnami/grafana \\
+                    --set service.type=NodePort \\
+                    --set service.nodePorts.grafana=${GRAFANA_PORT} \\
+                    --set admin.password=${GRAFANA_ADMIN_PASSWORD} \\
+                    --namespace ${K3S_NAMESPACE}
+                    """
+                }
+            }
+        }
+    }
 ```
 
 ## Problem met
