@@ -106,8 +106,7 @@ In order to get the admin credentials, you just need to do this:
 ```
 
 ## Problem met
-During this task I've met a problem of failing Jenkins pod when runinng a pipeline. it was caused by insufficiend diskspace.
-The problem was fixed by adding the discpace and exptending the file sysnet
+During this task, I encountered an issue with a failing Jenkins pod when running a pipeline, which was caused by insufficient disk space. The problem was resolved by increasing the disk space and extending the filesystem.
 ```
 aws ec2 modify-volume --volume-id vol-0e218ffe06c8e6c12 --size 30
 sudo growpart /dev/nvme0n1 3
