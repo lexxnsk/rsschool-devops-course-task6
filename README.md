@@ -17,6 +17,7 @@ To ensure the successful execution of the Jenkins pipeline, we need to grant the
 
 ## Automated deployment using Jenkins
 The Git repository includes a Jenkinsfile that defines a straightforward pipeline. This pipeline is triggered automatically every time changes are pushed to the GitHub repository. A webhook is configured to establish this connection between GitHub and Jenkins, ensuring that the pipeline executes seamlessly with each update.
+Detailed Jenkins configuration was described in previous tasks.
 
 ## Access via Internet
 An NGINX reverse proxy with TLS certificates is deployed on the Bastion host to ensure secure and encrypted access to the [Grafana Web UI](https://grafana.rss.myslivets.ru/). This setup safeguards communication by routing traffic through HTTPS, enhancing security and accessibility.
@@ -102,4 +103,16 @@ In order to get the admin credentials, you just need to do this:
     echo "User: admin"
     echo "Password: $(kubectl get secret grafana-admin --namespace jenkins -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
 
+```
+
+## Problem met
+During this task I've met a problem of failing Jenkins pod when runinng a pipeline. it was caused by insufficiend diskspace.
+The problem was fixed by adding the discpace and exptending the file sysnet
+```
+aws ec2 modify-volume --volume-id vol-0e218ffe06c8e6c12 --size 30
+sudo growpart /dev/nvme0n1 3
+sudo xfs_growfs /dev/nvme0n1p3
+ec2-user@ip-10-0-2-10:~> df -h /dev/nvme0n1p3
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p3   30G  8.2G   22G  28% /
 ```
