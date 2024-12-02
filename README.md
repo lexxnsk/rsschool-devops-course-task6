@@ -4,7 +4,7 @@
 This repository branch contains a Jenkins Pipeline along with the required configuration adjustments to automate the deployment of Grafana, a multi-platform open source analytics and interactive visualization web application.
 
 ## Manual deployment using Helm
-The provided code snippet demonstrates how to deploy Grafana in a Kubernetes cluster using Helm, a package manager for Kubernetes. It involves adding the Bitnami Helm repository, updating the repository index, and using the helm upgrade --install command to deploy the kube-prometheus chart.
+The provided code snippet demonstrates how to deploy Grafana in a Kubernetes cluster using Helm, a package manager for Kubernetes. It involves adding the Bitnami Helm repository, updating the repository index, and using the helm upgrade --install command to deploy the grafana chart.
 - helm repo add bitnami https://charts.bitnami.com/bitnami
 - helm repo update
 - helm upgrade --install grafana bitnami/grafana \
@@ -27,7 +27,7 @@ server {
     server_name grafana.rss.myslivets.ru;
 
     location / {
-        proxy_pass http://10.0.2.10:32003;  # Forward requests to the Prometheus server
+        proxy_pass http://10.0.2.10:32003;  # Forward requests to the Grafana service
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
