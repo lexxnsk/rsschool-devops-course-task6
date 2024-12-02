@@ -16,7 +16,7 @@ spec:
     }
 
     environment {
-        PROMETHEUS_PORT = "32002"
+        GRAFANA_PORT = "32003"
         K3S_NAMESPACE = "jenkins"
     }
 
@@ -31,14 +31,17 @@ spec:
         stage('Deploy Application to K3S using Helm') {
             steps {
                 container('helm') {
-                    sh """
-                    helm repo add bitnami https://charts.bitnami.com/bitnami
-                    helm repo update
-                    helm upgrade --install prometheus bitnami/kube-prometheus \\
-                    --set prometheus.service.type=NodePort \\
-                    --set prometheus.service.nodePorts.http=${PROMETHEUS_PORT} \\
-                    --namespace ${K3S_NAMESPACE}
-                    """
+                    withCredentials([string(credentialsId: 'GRAFANA_ADMIN_PASSWORD', variable: 'GRAFANA_ADMIN_PASSWORD')]) {
+                        sh """
+                        helm repo add bitnami https://charts.bitnami.com/bitnami
+                        helm repo update
+                        helm upgrade --install grafana bitnami/grafana \\
+                        --set service.type=NodePort \\
+                        --set service.nodePorts.grafana=${GRAFANA_PORT} \\
+                        --set admin.password=${GRAFANA_ADMIN_PASSWORD} \\
+                        --namespace ${K3S_NAMESPACE}
+                        """
+                    }
                 }
             }
         }
@@ -69,4 +72,3 @@ spec:
         }
     }
 }
-
