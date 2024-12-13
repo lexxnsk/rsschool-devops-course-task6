@@ -1,16 +1,23 @@
-# The RS School - AWS DevOps Course. Project Documentation. Task 8.
+# The RS School - AWS DevOps Course. Project Documentation. Task 9.
 ---
 
-This repository branch contains a Jenkins Pipeline along with the required configuration adjustments to automate the deployment of Grafana, a multi-platform open source analytics and interactive visualization web application.
+This repository branch contains a Jenkins Pipeline along with the required configuration adjustments to automate the deployment of Alerting in Grafana, a multi-platform open source analytics and interactive visualization web application.
 
 ## Manual deployment using Helm
-The provided code snippet demonstrates how to deploy Grafana in a Kubernetes cluster using Helm, a package manager for Kubernetes. It involves adding the Bitnami Helm repository, updating the repository index, and using the helm upgrade --install command to deploy the grafana chart.
-- helm repo add bitnami https://charts.bitnami.com/bitnami
-- helm repo update
-- helm upgrade --install grafana bitnami/grafana \
-    --set service.type=NodePort \
-    --set service.nodePorts.grafana=32003 \
-    --set admin.password=admin
+The provided code snippet demonstrates how to deploy Grafana with a proper SMTP configuration in a Kubernetes cluster using Helm, a package manager for Kubernetes. It involves adding the Bitnami Helm repository, updating the repository index, and using the helm upgrade --install command to deploy the grafana chart.
+```
+helm upgrade --install grafana bitnami/grafana \
+--set service.type=NodePort \
+--set service.nodePorts.grafana=32003 \
+--set admin.password=<xxxxxxxxxxxxxxxxxxx> \
+--set smtp.enabled=true \
+--set smtp.user=<yyyyyyyyyyyyyyyy> \
+--set smtp.password=<zzzzzzzzzzzzzzzzzzzz> \
+--set smtp.host=email-smtp.eu-central-1.amazonaws.com:587 \
+--set smtp.fromAddress=<myemail>@gmail.com \
+--set smtp.skipVerify=false \
+--namespace jenkins
+```
 
 ## Automated deployment using Jenkins
 The Git repository includes a Jenkinsfile that defines a straightforward pipeline. This pipeline is triggered automatically every time changes are pushed to the GitHub repository. A webhook is configured to establish this connection between GitHub and Jenkins, ensuring that the pipeline executes seamlessly with each update.
@@ -95,25 +102,23 @@ If you like Certbot, please consider supporting our work by:
 ## Grafana default user and password
 In order to get the admin credentials, you just need to do this:
 ```
-2. Get the admin credentials:
+Get the admin credentials:
+  echo "User: admin"
+  echo "Password: $(kubectl get secret grafana-admi    --namespace jenkins -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
 
-    echo "User: admin"
-    echo "Password: $(kubectl get secret grafana-admin --namespace jenkins -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d)"
-
 ```
-Also you can deploy manually and specify admin password as a parameter:
-```
-amyslivets@MacBook-Air-Alex rsschool-devops-course-task6 % - helm upgrade --install grafana bitnami/grafana \
-    --set service.type=NodePort \
-    --set service.nodePorts.grafana=32003 \
-    --set admin.password=admin
-```
-Best option is to keep password in Jenkins Secrets (I've created a variable called GRAFANA_ADMIN_PASSWORD) and use it in Jenkins Pipeline as a variable:
+Best option is to keep Grafana password as well as SMTP credentials in Jenkins Secrets and use it in Jenkins Pipeline as a variable:
 ```
         stage('Deploy Application to K3S using Helm') {
             steps {
                 container('helm') {
-                    withCredentials([string(credentialsId: 'GRAFANA_ADMIN_PASSWORD', variable: 'GRAFANA_ADMIN_PASSWORD')]) {
+                    withCredentials([
+                        string(credentialsId: 'GRAFANA_ADMIN_PASSWORD', variable: 'GRAFANA_ADMIN_PASSWORD'),
+                        string(credentialsId: 'SMTP_USER', variable: 'SMTP_USER'),
+                        string(credentialsId: 'SMTP_PASSWORD', variable: 'SMTP_PASSWORD'),
+                        string(credentialsId: 'SMTP_HOST', variable: 'SMTP_HOST'),
+                        string(credentialsId: 'SMTP_EMAIL', variable: 'SMTP_EMAIL')
+                    ]) {
                         sh """
                         helm repo add bitnami https://charts.bitnami.com/bitnami
                         helm repo update
@@ -121,6 +126,12 @@ Best option is to keep password in Jenkins Secrets (I've created a variable call
                         --set service.type=NodePort \\
                         --set service.nodePorts.grafana=${GRAFANA_PORT} \\
                         --set admin.password=${GRAFANA_ADMIN_PASSWORD} \\
+                        --set smtp.enabled=true \\
+                        --set smtp.user=${SMTP_USER} \\
+                        --set smtp.password=${SMTP_PASSWORD} \\
+                        --set smtp.host=${SMTP_HOST} \\
+                        --set smtp.fromAddress=${SMTP_EMAIL} \\
+                        --set smtp.skipVerify=false \\
                         --namespace ${K3S_NAMESPACE}
                         """
                     }
