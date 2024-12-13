@@ -23,82 +23,6 @@ helm upgrade --install grafana bitnami/grafana \
 The Git repository includes a Jenkinsfile that defines a straightforward pipeline. This pipeline is triggered automatically every time changes are pushed to the GitHub repository. A webhook is configured to establish this connection between GitHub and Jenkins, ensuring that the pipeline executes seamlessly with each update.
 Detailed Jenkins configuration was described in previous tasks.
 
-## Access via Internet
-An NGINX reverse proxy with TLS certificates is deployed on the Bastion host to ensure secure and encrypted access to the [Grafana Web UI](https://grafana.rss.myslivets.ru/). This setup safeguards communication by routing traffic through HTTPS, enhancing security and accessibility.
-Here is an example of related NGINX proxy config:
-```
-server {
-
-    server_name grafana.rss.myslivets.ru;
-
-    location / {
-        proxy_pass http://10.0.2.10:32003;  # Forward requests to the Grafana service
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/grafana.rss.myslivets.ru/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/grafana.rss.myslivets.ru/privkey.pem; # managed by Certbot
-    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
-
-}
-server {
-    if ($host = grafana.rss.myslivets.ru) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
-
-
-    listen 80;
-    server_name grafana.rss.myslivets.ru;
-    return 404; # managed by Certbot
-
-
-}
-
-```
-
-## HTTPS (TLS certificate deployment)
-The certbot tool is used to create the certificate using Let's Encrypt service and deploy it into NGINX config
-
-```
-ubuntu@ip-10-0-0-252:~$ sudo apt-get install certbot python3-certbot-nginx
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-certbot is already the newest version (2.9.0-1).
-python3-certbot-nginx is already the newest version (2.9.0-1).
-0 upgraded, 0 newly installed, 0 to remove and 28 not upgraded.
-ubuntu@ip-10-0-0-252:~$ 
-ubuntu@ip-10-0-0-252:~$ sudo certbot --nginx -d grafana.rss.myslivets.ru
-Saving debug log to /var/log/letsencrypt/letsencrypt.log
-Requesting a certificate for grafana.rss.myslivets.ru
-
-Successfully received certificate.
-Certificate is saved at: /etc/letsencrypt/live/grafana.rss.myslivets.ru/fullchain.pem
-Key is saved at:         /etc/letsencrypt/live/grafana.rss.myslivets.ru/privkey.pem
-This certificate expires on 2025-03-02.
-These files will be updated when the certificate renews.
-Certbot has set up a scheduled task to automatically renew this certificate in the background.
-
-Deploying certificate
-Successfully deployed certificate for grafana.rss.myslivets.ru to /etc/nginx/sites-enabled/default
-Congratulations! You have successfully enabled HTTPS on https://grafana.rss.myslivets.ru
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-If you like Certbot, please consider supporting our work by:
- * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
- * Donating to EFF:                    https://eff.org/donate-le
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-```
-
 ## Grafana default user and password
 In order to get the admin credentials, you just need to do this:
 ```
@@ -140,27 +64,28 @@ Best option is to keep Grafana password as well as SMTP credentials in Jenkins S
         }
 ```
 
-## DashBoard Creation and import
-After installing Grafana, the first step is to add a data source, which in this case is Prometheus. You can then create a dashboard and add the necessary graphs. However, issues may arise when importing a dashboard from JSON if it contains a different UID value for the data source. For example, you might find a section like this in the JSON:
-```
-          "datasource": {
-            "type": "prometheus",
-            "uid": "be5pzha6p61vka"
-```
-To successfully connect your dashboard to the Prometheus data source, you need to update this UID to match the UID of your current Prometheus instance. You can find the correct UID by navigating to your Prometheus data source settings in Grafana:
-<img width="1392" alt="Screenshot 2024-12-02 at 18 01 16" src="https://github.com/user-attachments/assets/3d6a5116-391f-4b37-9e7e-83d1df9427e9">
+## Example of Alert configuration
+<img width="1392" alt="Screenshot 2024-12-13 at 16 58 53" src="https://github.com/user-attachments/assets/7a956d4d-6da6-4b05-99b1-8c98f75cf1db" />
 
+## Stress testing
+### In order to overload CPU using default OS tools you can do this:
+```
+(reverse-i-search)`': ^C
+ec2-user@ip-10-0-2-10:~> yes > /dev/null
+^C
+ec2-user@ip-10-0-2-10:~> 
+```
+### In order to overload RAM using default OS tools you can do this:
+```
+# Allocate 100 MB of RAM
+dd if=/dev/zero of=/dev/shm/stress_test_$RANDOM bs=100M count=1
+# Delete dummy RAM allocations
+rm /dev/shm/stress_test_*
+```
+### Here is a DashBoard, showing these tricks effect:
+<img width="1392" alt="Screenshot 2024-12-13 at 17 00 02" src="https://github.com/user-attachments/assets/5da995c2-5d41-4e1b-b98d-051a03a52987" />
+### Here is what you have in your email inbox:
+<img width="1196" alt="Screenshot 2024-12-13 at 17 01 26" src="https://github.com/user-attachments/assets/5400414a-b8b0-45a5-b059-dfc525a0b775" />
 
-## Problem met
-During this task, I encountered an issue with a failing Jenkins pod when running a pipeline, which was caused by insufficient disk space. The problem was resolved by increasing the disk space and extending the filesystem.
-```
-aws ec2 modify-volume --volume-id vol-0e218ffe06c8e6c12 --size 30
-sudo growpart /dev/nvme0n1 3
-sudo xfs_growfs /dev/nvme0n1p3
-ec2-user@ip-10-0-2-10:~> df -h /dev/nvme0n1p3
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/nvme0n1p3   30G  8.2G   22G  28% /
-```
-<img width="654" alt="disk_size_plus20G" src="https://github.com/user-attachments/assets/a978e319-b2dc-44a1-a3f9-d02922fe3c1f">
 
 
